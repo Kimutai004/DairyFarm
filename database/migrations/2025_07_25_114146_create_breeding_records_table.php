@@ -15,15 +15,13 @@ return new class extends Migration
     {
         Schema::create('breeding_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('cattle_id')->constrained()->onDelete('cascade');
             $table->date('breeding_date');
-            $table->string('breeding_method')->default('artificial_insemination'); // artificial_insemination, natural
-            $table->string('sire_info')->nullable();
+            $table->string('breeding_method'); // AI, Natural, Embryo Transfer
+            $table->string('sire_breed')->nullable();
             $table->date('expected_calving_date')->nullable();
             $table->date('actual_calving_date')->nullable();
-            $table->enum('pregnancy_status', ['confirmed', 'not_confirmed', 'failed', 'completed'])->default('not_confirmed');
-            $table->integer('gestation_period')->nullable(); // in days
+            $table->boolean('pregnancy_confirmed')->nullable(); // true, false, null
             $table->text('notes')->nullable();
             $table->timestamps();
         });

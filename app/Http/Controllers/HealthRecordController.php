@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\HealthRecord;
+use App\Models\Cattle;
 
 class HealthRecordController extends Controller
 {
@@ -13,7 +15,11 @@ class HealthRecordController extends Controller
      */
     public function index()
     {
-        //
+        $healthRecords = HealthRecord::whereHas('cattle', function($query) {
+            $query->where('user_id', auth()->id());
+        })->with('cattle')->paginate(12);
+
+        return view('health-records.index', compact('healthRecords'));
     }
 
     /**
@@ -23,7 +29,8 @@ class HealthRecordController extends Controller
      */
     public function create()
     {
-        //
+        $cattle = Cattle::where('user_id', auth()->id())->where('status', 'active')->get();
+        return view('health-records.create', compact('cattle'));
     }
 
     /**
@@ -34,7 +41,29 @@ class HealthRecordController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'cattle_id' => 'required|exists:cattle,id',
+            'checkup_date' => 'required|date',
+            'checkup_type' => 'required|string|max:255',
+            'veterinarian' => 'nullable|string|max:255',
+            'symptoms' => 'nullable|string',
+            'diagnosis' => 'nullable|string',
+            'treatment' => 'nullable|string',
+            'medication' => 'nullable|string',
+            'next_checkup_date' => 'nullable|date|after:checkup_date',
+            'notes' => 'nullable|string',
+            'cost' => 'nullable|numeric|min:0',
+        ]);
+
+        // Verify cattle belongs to the authenticated user
+        $cattle = Cattle::where('id', $request->cattle_id)
+                        ->where('user_id', auth()->id())
+                        ->firstOrFail();
+
+        HealthRecord::create($request->all());
+
+        return redirect()->route('health-records.index')
+                        ->with('success', 'Health record created successfully.');
     }
 
     /**
@@ -45,7 +74,11 @@ class HealthRecordController extends Controller
      */
     public function show($id)
     {
-        //
+        $healthRecord = HealthRecord::whereHas('cattle', function($query) {
+            $query->where('user_id', auth()->id());
+        })->with('cattle')->findOrFail($id);
+
+        return view('health-records.show', compact('healthRecord'));
     }
 
     /**
@@ -56,7 +89,13 @@ class HealthRecordController extends Controller
      */
     public function edit($id)
     {
-        //
+        $healthRecord = HealthRecord::whereHas('cattle', function($query) {
+            $query->where('user_id', auth()->id());
+        })->with('cattle')->findOrFail($id);
+
+        $cattle = Cattle::where('user_id', auth()->id())->where('status', 'active')->get();
+
+        return view('health-records.edit', compact('healthRecord', 'cattle'));
     }
 
     /**
@@ -68,7 +107,33 @@ class HealthRecordController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'cattle_id' => 'required|exists:cattle,id',
+            'checkup_date' => 'required|date',
+            'checkup_type' => 'required|string|max:255',
+            'veterinarian' => 'nullable|string|max:255',
+            'symptoms' => 'nullable|string',
+            'diagnosis' => 'nullable|string',
+            'treatment' => 'nullable|string',
+            'medication' => 'nullable|string',
+            'next_checkup_date' => 'nullable|date|after:checkup_date',
+            'notes' => 'nullable|string',
+            'cost' => 'nullable|numeric|min:0',
+        ]);
+
+        $healthRecord = HealthRecord::whereHas('cattle', function($query) {
+            $query->where('user_id', auth()->id());
+        })->findOrFail($id);
+
+        // Verify cattle belongs to the authenticated user
+        $cattle = Cattle::where('id', $request->cattle_id)
+                        ->where('user_id', auth()->id())
+                        ->firstOrFail();
+
+        $healthRecord->update($request->all());
+
+        return redirect()->route('health-records.index')
+                        ->with('success', 'Health record updated successfully.');
     }
 
     /**
@@ -79,6 +144,13 @@ class HealthRecordController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $healthRecord = HealthRecord::whereHas('cattle', function($query) {
+            $query->where('user_id', auth()->id());
+        })->findOrFail($id);
+
+        $healthRecord->delete();
+
+        return redirect()->route('health-records.index')
+                        ->with('success', 'Health record deleted successfully.');
     }
 }

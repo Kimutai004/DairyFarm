@@ -1,7 +1,147 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
+<!-- Mobile Sidebar Toggle -->
+<button class="sidebar-toggle" id="sidebarToggle">
+    <i class="fas fa-bars"></i>
+</button>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="dashboard-layout">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="farm-logo">
+                <i class="fas fa-cow"></i>
+                <span>DairyFarm Pro</span>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">
+                    @if(auth()->user()->profile_picture)
+                        <img src="{{ Storage::url(auth()->user()->profile_picture) }}" alt="Profile">
+                    @else
+                        <i class="fas fa-user"></i>
+                    @endif
+                </div>
+                <div class="user-details">
+                    <div class="user-name">{{ auth()->user()->name }}</div>
+                    <div class="user-role">Farm Manager</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            <div class="menu-section">
+                <div class="menu-title">Dashboard</div>
+                <a href="{{ route('home') }}" class="menu-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Overview</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">Livestock</div>
+                <a href="{{ route('cattle.index') }}" class="menu-item">
+                    <i class="fas fa-cow"></i>
+                    <span>My Cattle</span>
+                    <span class="menu-badge">{{ \App\Models\Cattle::where('user_id', auth()->id())->count() }}</span>
+                </a>
+                <a href="{{ route('cattle.create') }}" class="menu-item">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add Cattle</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">Production</div>
+                <a href="{{ route('milk-production.index') }}" class="menu-item">
+                    <i class="fas fa-glass-whiskey"></i>
+                    <span>Milk Records</span>
+                </a>
+                <a href="{{ route('milk-production.create') }}" class="menu-item">
+                    <i class="fas fa-plus"></i>
+                    <span>Record Production</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">Health & Care</div>
+                <a href="{{ route('health-records.index') }}" class="menu-item">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Health Records</span>
+                </a>
+                <a href="{{ route('health-records.create') }}" class="menu-item">
+                    <i class="fas fa-stethoscope"></i>
+                    <span>Health Check</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">Feeding</div>
+                <a href="{{ route('feed-records.index') }}" class="menu-item">
+                    <i class="fas fa-wheat-awn"></i>
+                    <span>Feed Records</span>
+                </a>
+                <a href="{{ route('feed-records.create') }}" class="menu-item">
+                    <i class="fas fa-seedling"></i>
+                    <span>Record Feeding</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">Breeding</div>
+                <a href="{{ route('breeding-records.index') }}" class="menu-item">
+                    <i class="fas fa-heart"></i>
+                    <span>Breeding Records</span>
+                </a>
+                <a href="{{ route('breeding-records.create') }}" class="menu-item">
+                    <i class="fas fa-venus-mars"></i>
+                    <span>Record Breeding</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-label">Today's Milk</div>
+                        <div class="stat-value">{{ number_format(\App\Models\MilkProduction::where('user_id', auth()->id())->whereDate('production_date', today())->sum('total_milk'), 1) }}L</div>
+                    </div>
+                </div>
+                
+                <div class="quick-stat">
+                    <div class="stat-icon success">
+                        <i class="fas fa-cow"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-label">Active Cattle</div>
+                        <div class="stat-value">{{ \App\Models\Cattle::where('user_id', auth()->id())->where('status', 'active')->count() }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-actions">
+                <a href="{{ route('logout') }}" class="action-link" 
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
     <!-- Welcome Section -->
     <div class="row mb-4">
         <div class="col-12">
@@ -81,19 +221,19 @@
                 </div>
                 <div class="card-body">
                     <div class="action-buttons">
-                        <a href="#" class="action-btn primary">
+                        <a href="{{ route('milk-production.create') }}" class="action-btn primary">
                             <i class="fas fa-plus-circle"></i>
                             <span>Record Milk Production</span>
                         </a>
-                        <a href="#" class="action-btn success">
+                        <a href="{{ route('health-records.create') }}" class="action-btn success">
                             <i class="fas fa-heartbeat"></i>
                             <span>Health Check</span>
                         </a>
-                        <a href="#" class="action-btn warning">
+                        <a href="{{ route('feed-records.create') }}" class="action-btn warning">
                             <i class="fas fa-wheat-awn"></i>
                             <span>Feed Record</span>
                         </a>
-                        <a href="#" class="action-btn info">
+                        <a href="{{ route('milk-production.index') }}" class="action-btn info">
                             <i class="fas fa-chart-line"></i>
                             <span>View Reports</span>
                         </a>
@@ -180,10 +320,269 @@
                 </div>
             </div>
         </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <style>
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+.sidebar {
+    width: 280px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.farm-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.farm-logo i {
+    font-size: 2rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-avatar i {
+    font-size: 1.5rem;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.user-role {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+.sidebar-menu {
+    flex: 1;
+    padding: 1rem 0;
+}
+
+.menu-section {
+    margin-bottom: 1.5rem;
+}
+
+.menu-title {
+    padding: 0 1.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-decoration: none;
+}
+
+.menu-item.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.menu-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.menu-item i {
+    width: 20px;
+    font-size: 1.1rem;
+}
+
+.menu-badge {
+    margin-left: auto;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.quick-stats {
+    margin-bottom: 1rem;
+}
+
+.quick-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.stat-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.stat-icon.primary {
+    background: rgba(102, 126, 234, 0.3);
+}
+
+.stat-icon.success {
+    background: rgba(40, 167, 69, 0.3);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.stat-value {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.action-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.action-link:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem;
+    background: #f8f9fa;
+}
+
+/* Mobile Sidebar Toggle */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Sidebar Overlay for Mobile */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 5rem 1rem 1rem;
+    }
+    
+    .sidebar-toggle {
+        display: block;
+    }
+    
+    .sidebar-overlay.active {
+        display: block;
+    }
+}
 .welcome-card {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -411,6 +810,48 @@ document.addEventListener('DOMContentLoaded', function() {
     
     updateTime();
     setInterval(updateTime, 1000);
+
+    // Sidebar functionality for mobile
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    if (sidebarToggle && sidebar && sidebarOverlay) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+        });
+
+        sidebarOverlay.addEventListener('click', function() {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        });
+
+        // Close sidebar when clicking menu items on mobile
+        const menuItems = sidebar.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        });
+    }
+
+    // Add smooth scrolling to anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
 });
 </script>
 @endsection
