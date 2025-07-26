@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\MilkProduction;
+use App\Models\Cattle;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class MilkProductionController extends Controller
@@ -14,7 +17,15 @@ class MilkProductionController extends Controller
      */
     public function index()
     {
-        //
+        $productions = MilkProduction::with(['cattle', 'user'])
+                                   ->latest('production_date')
+                                   ->paginate(15);
+        
+        $todayTotal = MilkProduction::whereDate('production_date', today())->sum('total_milk');
+        $weekTotal = MilkProduction::whereBetween('production_date', [now()->startOfWeek(), now()->endOfWeek()])->sum('total_milk');
+        $monthTotal = MilkProduction::whereMonth('production_date', now()->month)->sum('total_milk');
+        
+        return view('admin.milk-production.index', compact('productions', 'todayTotal', 'weekTotal', 'monthTotal'));
     }
 
     /**
@@ -24,7 +35,9 @@ class MilkProductionController extends Controller
      */
     public function create()
     {
-        //
+        $cattle = Cattle::where('status', 'active')->where('gender', 'female')->get();
+        $farmers = User::where('role', 'farmer')->get();
+        return view('admin.milk-production.create', compact('cattle', 'farmers'));
     }
 
     /**
@@ -35,7 +48,23 @@ class MilkProductionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'cattle_id' => 'required|exists:cattle,id',
+            'user_id' => 'required|exists:users,id',
+            'production_date' => 'required|date',
+            'morning_milk' => 'required|numeric|min:0',
+            'evening_milk' => 'required|numeric|min:0',
+            'quality_grade' => 'required|in:A,B,C',
+            'notes' => 'nullable|string'
+        ]);
+
+        $data = $request->all();
+        $data['total_milk'] = $data['morning_milk'] + $data['evening_milk'];
+
+        MilkProduction::create($data);
+
+        return redirect()->route('admin.milk-production.index')
+                        ->with('success', 'Milk production recorded successfully.');
     }
 
     /**
@@ -46,7 +75,8 @@ class MilkProductionController extends Controller
      */
     public function show($id)
     {
-        //
+        $production = MilkProduction::with(['cattle', 'user'])->findOrFail($id);
+        return view('admin.milk-production.show', compact('production'));
     }
 
     /**
@@ -57,7 +87,10 @@ class MilkProductionController extends Controller
      */
     public function edit($id)
     {
-        //
+        $production = MilkProduction::findOrFail($id);
+        $cattle = Cattle::where('status', 'active')->where('gender', 'female')->get();
+        $farmers = User::where('role', 'farmer')->get();
+        return view('admin.milk-production.edit', compact('production', 'cattle', 'farmers'));
     }
 
     /**
@@ -69,7 +102,25 @@ class MilkProductionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $production = MilkProduction::findOrFail($id);
+        
+        $request->validate([
+            'cattle_id' => 'required|exists:cattle,id',
+            'user_id' => 'required|exists:users,id',
+            'production_date' => 'required|date',
+            'morning_milk' => 'required|numeric|min:0',
+            'evening_milk' => 'required|numeric|min:0',
+            'quality_grade' => 'required|in:A,B,C',
+            'notes' => 'nullable|string'
+        ]);
+
+        $data = $request->all();
+        $data['total_milk'] = $data['morning_milk'] + $data['evening_milk'];
+
+        $production->update($data);
+
+        return redirect()->route('admin.milk-production.index')
+                        ->with('success', 'Milk production updated successfully.');
     }
 
     /**
@@ -80,6 +131,10 @@ class MilkProductionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $production = MilkProduction::findOrFail($id);
+        $production->delete();
+
+        return redirect()->route('admin.milk-production.index')
+                        ->with('success', 'Milk production record deleted successfully.');
     }
 }

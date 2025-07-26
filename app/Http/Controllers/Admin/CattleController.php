@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cattle;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CattleController extends Controller
@@ -14,7 +16,8 @@ class CattleController extends Controller
      */
     public function index()
     {
-        //
+        $cattle = Cattle::with('assignedUser')->latest()->paginate(15);
+        return view('admin.cattle.index', compact('cattle'));
     }
 
     /**
@@ -24,7 +27,8 @@ class CattleController extends Controller
      */
     public function create()
     {
-        //
+        $farmers = User::where('role', 'farmer')->get();
+        return view('admin.cattle.create', compact('farmers'));
     }
 
     /**
@@ -35,7 +39,20 @@ class CattleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'tag_number' => 'required|unique:cattle',
+            'breed' => 'required',
+            'gender' => 'required|in:male,female',
+            'date_of_birth' => 'required|date',
+            'weight' => 'nullable|numeric',
+            'assigned_to' => 'nullable|exists:users,id',
+            'status' => 'required|in:active,inactive,sold,deceased'
+        ]);
+
+        Cattle::create($request->all());
+
+        return redirect()->route('admin.cattle.index')
+                        ->with('success', 'Cattle registered successfully.');
     }
 
     /**
@@ -46,7 +63,8 @@ class CattleController extends Controller
      */
     public function show($id)
     {
-        //
+        $cattle = Cattle::with(['assignedUser', 'milkProductions', 'healthRecords', 'breedingRecords'])->findOrFail($id);
+        return view('admin.cattle.show', compact('cattle'));
     }
 
     /**
@@ -57,7 +75,9 @@ class CattleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $cattle = Cattle::findOrFail($id);
+        $farmers = User::where('role', 'farmer')->get();
+        return view('admin.cattle.edit', compact('cattle', 'farmers'));
     }
 
     /**
@@ -69,7 +89,22 @@ class CattleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $cattle = Cattle::findOrFail($id);
+        
+        $request->validate([
+            'tag_number' => 'required|unique:cattle,tag_number,' . $id,
+            'breed' => 'required',
+            'gender' => 'required|in:male,female',
+            'date_of_birth' => 'required|date',
+            'weight' => 'nullable|numeric',
+            'assigned_to' => 'nullable|exists:users,id',
+            'status' => 'required|in:active,inactive,sold,deceased'
+        ]);
+
+        $cattle->update($request->all());
+
+        return redirect()->route('admin.cattle.index')
+                        ->with('success', 'Cattle updated successfully.');
     }
 
     /**
@@ -80,6 +115,10 @@ class CattleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cattle = Cattle::findOrFail($id);
+        $cattle->delete();
+
+        return redirect()->route('admin.cattle.index')
+                        ->with('success', 'Cattle deleted successfully.');
     }
 }

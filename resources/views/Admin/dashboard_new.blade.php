@@ -57,11 +57,11 @@
         <div class="col-xl-3 col-md-6">
             <div class="stat-card stat-card-warning">
                 <div class="stat-icon">
-                    <i class="fas fa-heartbeat"></i>
+                    <i class="fas fa-syringe"></i>
                 </div>
                 <div class="stat-content">
-                    <h3 class="stat-number">{{ $upcomingCheckups->count() ?? 0 }}</h3>
-                    <p class="stat-label">Upcoming Health Checkups</p>
+                    <h3 class="stat-number">{{ $upcomingVaccinations ?? 5 }}</h3>
+                    <p class="stat-label">Upcoming Vaccinations</p>
                     <div class="stat-trend">
                         <i class="fas fa-clock"></i>
                         <span>Next 7 days</span>
@@ -177,57 +177,49 @@
                     <a href="#" class="view-all-link">View All</a>
                 </div>
                 <div class="activity-list">
-                    @if($recentMilkProductions->count() > 0 || $recentSales->count() > 0 || $upcomingCheckups->count() > 0)
-                        @foreach($recentMilkProductions->take(2) as $production)
-                        <div class="activity-item">
-                            <div class="activity-icon bg-primary">
-                                <i class="fas fa-glass-whiskey"></i>
-                            </div>
-                            <div class="activity-content">
-                                <h6>Milk production recorded</h6>
-                                <p>{{ $production->total_milk }}L from {{ $production->cattle->tag_number ?? 'cattle' }}</p>
-                                <small class="text-muted">{{ $production->production_date->diffForHumans() }}</small>
-                            </div>
+                    <div class="activity-item">
+                        <div class="activity-icon bg-success">
+                            <i class="fas fa-cow"></i>
                         </div>
-                        @endforeach
-
-                        @foreach($recentSales->take(1) as $sale)
-                        <div class="activity-item">
-                            <div class="activity-icon bg-success">
-                                <i class="fas fa-dollar-sign"></i>
-                            </div>
-                            <div class="activity-content">
-                                <h6>Sale recorded</h6>
-                                <p>${{ number_format($sale->total_amount, 2) }} - {{ $sale->product_type }}</p>
-                                <small class="text-muted">{{ $sale->sale_date->diffForHumans() }}</small>
-                            </div>
+                        <div class="activity-content">
+                            <h6>New cattle registered</h6>
+                            <p>Holstein cow #C001 added to the farm</p>
+                            <small class="text-muted">2 hours ago</small>
                         </div>
-                        @endforeach
-
-                        @foreach($upcomingCheckups->take(1) as $checkup)
-                        <div class="activity-item">
-                            <div class="activity-icon bg-warning">
-                                <i class="fas fa-heartbeat"></i>
-                            </div>
-                            <div class="activity-content">
-                                <h6>Health checkup due</h6>
-                                <p>{{ $checkup->cattle->tag_number ?? 'Cattle' }} - {{ $checkup->health_status }}</p>
-                                <small class="text-muted">{{ $checkup->next_checkup_date->diffForHumans() }}</small>
-                            </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon bg-primary">
+                            <i class="fas fa-glass-whiskey"></i>
                         </div>
-                        @endforeach
-                    @else
-                        <div class="activity-item">
-                            <div class="activity-icon bg-info">
-                                <i class="fas fa-info-circle"></i>
-                            </div>
-                            <div class="activity-content">
-                                <h6>Welcome to your dashboard!</h6>
-                                <p>Start by adding cattle and recording daily activities</p>
-                                <small class="text-muted">Get started today</small>
-                            </div>
+                        <div class="activity-content">
+                            <h6>Milk production recorded</h6>
+                            <p>Morning collection: 245L from 15 cattle</p>
+                            <small class="text-muted">5 hours ago</small>
                         </div>
-                    @endif
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon bg-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h6>Vaccination reminder</h6>
+                            <p>5 cattle due for vaccination this week</p>
+                            <small class="text-muted">1 day ago</small>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon bg-info">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h6>New employee added</h6>
+                            <p>John Doe joined as Farm Manager</p>
+                            <small class="text-muted">2 days ago</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -238,12 +230,6 @@
 <style>
 .dashboard-container {
     padding: 0;
-    animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 .welcome-section {
@@ -296,21 +282,6 @@
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    animation: slideUp 0.6s ease-out forwards;
-    opacity: 0;
-    transform: translateY(30px);
-}
-
-.stat-card:nth-child(1) { animation-delay: 0.1s; }
-.stat-card:nth-child(2) { animation-delay: 0.2s; }
-.stat-card:nth-child(3) { animation-delay: 0.3s; }
-.stat-card:nth-child(4) { animation-delay: 0.4s; }
-
-@keyframes slideUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .stat-card::before {
@@ -500,49 +471,12 @@
         font-size: 1.5rem;
     }
     
-    .welcome-section {
-        padding: 1.5rem;
-        text-align: center;
-    }
-    
-    .date-widget {
-        margin-top: 1rem;
-    }
-    
     .stat-number {
         font-size: 2rem;
     }
     
-    .stat-card {
-        padding: 1.5rem;
-    }
-    
     .action-grid {
         grid-template-columns: 1fr;
-    }
-    
-    .chart-body {
-        height: 250px;
-    }
-    
-    .activity-item {
-        flex-direction: column;
-        text-align: center;
-        gap: 0.5rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .welcome-title {
-        font-size: 1.25rem;
-    }
-    
-    .stat-number {
-        font-size: 1.75rem;
-    }
-    
-    .chart-body {
-        height: 200px;
     }
 }
 </style>
@@ -572,19 +506,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initializeMilkProductionChart() {
     const ctx = document.getElementById('milkProductionChart').getContext('2d');
-    
-    // Use real data from the controller
-    const monthlyData = @json($monthlyMilkData ?? []);
-    const labels = monthlyData.map(item => item.month);
-    const data = monthlyData.map(item => parseFloat(item.milk) || 0);
-    
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: labels.length > 0 ? labels : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             datasets: [{
                 label: 'Milk Production (L)',
-                data: data.length > 0 ? data : [245, 260, 238, 275, 290, 268, 285],
+                data: [245, 260, 238, 275, 290, 268, 285],
                 borderColor: '#4f46e5',
                 backgroundColor: 'rgba(79, 70, 229, 0.1)',
                 borderWidth: 3,

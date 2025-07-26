@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class RegisterController extends Controller
 {
@@ -31,6 +32,18 @@ class RegisterController extends Controller
     protected $redirectTo = '/home';
 
     /**
+     * Get the post-registration redirect path.
+     */
+    protected function redirectTo()
+    {
+        if (auth()->user()->role === 'admin') {
+            return '/admin/dashboard';
+        }
+        
+        return '/home';
+    }
+
+    /**
      * Create a new controller instance.
      *
      * @return void
@@ -52,6 +65,9 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'string', 'in:farmer,admin'],
+            'phone' => ['required', 'string', 'max:20'],
+            'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
     }
 
@@ -63,10 +79,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $profilePicturePath = null;
+        
+        // Handle profile picture upload
+        if (request()->hasFile('profile_picture')) {
+            $profilePicturePath = request()->file('profile_picture')->store('profile_pictures', 'public');
+        }
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role' => $data['role'] ?? 'farmer',
+            'phone' => $data['phone'],
+            'profile_picture' => $profilePicturePath,
         ]);
     }
 }
