@@ -370,33 +370,34 @@ document.addEventListener('DOMContentLoaded', function() {
 .page-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 2rem;
-    border-radius: 15px;
+    padding: 1.5rem;
+    border-radius: 12px;
     margin-bottom: 0;
 }
 
 .page-title {
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
 }
 
 .page-subtitle {
     opacity: 0.9;
     margin: 0;
+    font-size: 0.9rem;
 }
 
 .stat-card {
     background: white;
-    border-radius: 15px;
-    padding: 1.5rem;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease;
-    border-left: 4px solid;
+    border-left: 3px solid;
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
 }
 
 .stat-card.primary { border-left-color: #667eea; }
@@ -405,66 +406,72 @@ document.addEventListener('DOMContentLoaded', function() {
 .stat-card.info { border-left-color: #17a2b8; }
 
 .stat-card .stat-icon {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    font-size: 1.6rem;
+    margin-bottom: 0.8rem;
     color: #6c757d;
 }
 
 .stat-card h3 {
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
     color: #333;
 }
 
 .stat-card p {
     color: #6c757d;
     margin: 0;
+    font-size: 0.85rem;
 }
 
 .farmer-card {
     background: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
     border: none;
 }
 
 .farmer-card .card-header {
     background: #f8f9fa;
     border-bottom: 1px solid #e9ecef;
-    border-radius: 15px 15px 0 0;
-    padding: 1rem 1.5rem;
+    border-radius: 12px 12px 0 0;
+    padding: 1rem 1.25rem;
 }
 
 .farmer-card .card-body {
-    padding: 1.5rem;
+    padding: 1.25rem;
 }
 
 .cattle-avatar {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     background: #667eea;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
+    font-size: 0.85rem;
 }
 
 .table th {
     border-top: none;
     font-weight: 600;
     color: #495057;
+    font-size: 0.9rem;
 }
 
 .btn-group .btn {
     border-radius: 6px !important;
     margin-right: 2px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
 }
 
 @media (max-width: 768px) {
     .page-header {
         text-align: center;
+        padding: 1.2rem;
     }
     
     .card-tools {

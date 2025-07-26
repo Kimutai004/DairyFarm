@@ -403,98 +403,103 @@ document.addEventListener('DOMContentLoaded', function() {
 .page-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 2rem;
-    border-radius: 15px;
+    padding: 1.5rem;
+    border-radius: 12px;
     margin-bottom: 0;
 }
 
 .page-title {
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
 }
 
 .page-subtitle {
     opacity: 0.9;
     margin: 0;
+    font-size: 0.9rem;
 }
 
 .farmer-card {
     background: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
     border: none;
 }
 
 .farmer-card .card-header {
     background: #f8f9fa;
     border-bottom: 1px solid #e9ecef;
-    border-radius: 15px 15px 0 0;
-    padding: 1rem 1.5rem;
+    border-radius: 12px 12px 0 0;
+    padding: 1rem 1.25rem;
 }
 
 .farmer-card .card-body {
-    padding: 1.5rem;
+    padding: 1.25rem;
 }
 
 .total-display {
     background: linear-gradient(135deg, #28a745, #20c997);
     color: white;
-    padding: 1.5rem;
-    border-radius: 15px;
+    padding: 1.25rem;
+    border-radius: 12px;
     text-align: center;
 }
 
 .total-display .form-label {
     color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
 }
 
 .total-amount {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
 }
 
 .form-actions {
     display: flex;
     gap: 1rem;
-    margin-top: 2rem;
-    padding-top: 2rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
     border-top: 1px solid #e9ecef;
 }
 
 .stats-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.8rem;
 }
 
 .stat-item {
     display: flex;
     justify-content: between;
     align-items: center;
-    padding: 0.75rem;
+    padding: 0.6rem;
     background: #f8f9fa;
-    border-radius: 10px;
+    border-radius: 8px;
 }
 
 .stat-label {
     font-weight: 500;
     color: #6c757d;
+    font-size: 0.85rem;
 }
 
 .stat-value {
     font-weight: 700;
     color: #495057;
     margin-left: auto;
+    font-size: 0.9rem;
 }
 
 .recent-item {
     display: flex;
     justify-content: between;
     align-items: center;
-    padding: 0.75rem 0;
+    padding: 0.6rem 0;
     border-bottom: 1px solid #e9ecef;
+    font-size: 0.85rem;
 }
 
 .recent-item:last-child {
