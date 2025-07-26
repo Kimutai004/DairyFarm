@@ -50,7 +50,7 @@ class DashboardController extends Controller
         // Breeding records due
         $upcomingCalving = BreedingRecord::where('expected_calving_date', '>=', today())
                                        ->where('expected_calving_date', '<=', today()->addDays(30))
-                                       ->where('pregnancy_status', 'confirmed')
+                                       ->where('pregnancy_confirmed', true)
                                        ->with(['cattle', 'user'])
                                        ->get();
         

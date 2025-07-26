@@ -114,10 +114,10 @@
                             {{ $age }} {{ $age == 1 ? 'year' : 'years' }}
                         </td>
                         <td>
-                            @if($animal->assignedUser)
+                            @if($animal->user)
                                 <div class="assigned-user">
                                     <i class="fas fa-user me-1"></i>
-                                    {{ $animal->assignedUser->name }}
+                                    {{ $animal->user->name }}
                                 </div>
                             @else
                                 <span class="text-muted">Unassigned</span>

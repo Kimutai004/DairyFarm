@@ -16,7 +16,7 @@ class CattleController extends Controller
      */
     public function index()
     {
-        $cattle = Cattle::with('assignedUser')->latest()->paginate(15);
+        $cattle = Cattle::with('user')->latest()->paginate(15);
         return view('admin.cattle.index', compact('cattle'));
     }
 
@@ -63,7 +63,7 @@ class CattleController extends Controller
      */
     public function show($id)
     {
-        $cattle = Cattle::with(['assignedUser', 'milkProductions', 'healthRecords', 'breedingRecords'])->findOrFail($id);
+        $cattle = Cattle::with(['user', 'milkProductions', 'healthRecords', 'breedingRecords'])->findOrFail($id);
         return view('admin.cattle.show', compact('cattle'));
     }
 

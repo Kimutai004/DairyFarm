@@ -61,8 +61,8 @@
                                             data-breed="{{ $animal->breed }}"
                                             {{ old('cattle_id') == $animal->id ? 'selected' : '' }}>
                                         {{ $animal->tag_number }} - {{ ucfirst($animal->breed) }}
-                                        @if($animal->assignedUser)
-                                            ({{ $animal->assignedUser->name }})
+                                        @if($animal->user)
+                                            ({{ $animal->user->name }})
                                         @endif
                                     </option>
                                 @endforeach
