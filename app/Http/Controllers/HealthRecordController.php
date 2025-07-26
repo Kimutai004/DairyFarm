@@ -60,7 +60,10 @@ class HealthRecordController extends Controller
                         ->where('user_id', auth()->id())
                         ->firstOrFail();
 
-        HealthRecord::create($request->all());
+        $data = $request->all();
+        $data['user_id'] = auth()->id(); // Add the authenticated user's ID
+
+        HealthRecord::create($data);
 
         return redirect()->route('health-records.index')
                         ->with('success', 'Health record created successfully.');
@@ -130,7 +133,10 @@ class HealthRecordController extends Controller
                         ->where('user_id', auth()->id())
                         ->firstOrFail();
 
-        $healthRecord->update($request->all());
+        $data = $request->all();
+        $data['user_id'] = auth()->id(); // Ensure user_id is set
+
+        $healthRecord->update($data);
 
         return redirect()->route('health-records.index')
                         ->with('success', 'Health record updated successfully.');

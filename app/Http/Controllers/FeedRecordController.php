@@ -64,6 +64,7 @@ class FeedRecordController extends Controller
         }
 
         $data = $request->all();
+        $data['user_id'] = auth()->id(); // Add the authenticated user's ID
         $data['total_cost'] = $totalCost;
 
         FeedRecord::create($data);
@@ -140,6 +141,7 @@ class FeedRecordController extends Controller
         }
 
         $data = $request->all();
+        $data['user_id'] = auth()->id(); // Ensure user_id is set
         $data['total_cost'] = $totalCost;
 
         $feedRecord->update($data);

@@ -31,13 +31,14 @@ use App\Http\Controllers\Admin\ReportController as AdminReportController;
 
 Route::get('/', function () {
     return view('welcome');
-})->name('home');
+});
 
 Auth::routes();
 
 // User/Farmer Routes (Protected by auth middleware)
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/home', [DashboardController::class, 'index'])->name('home');
     
     // Cattle Management
     Route::resource('cattle', CattleController::class);
@@ -94,5 +95,3 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 });
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

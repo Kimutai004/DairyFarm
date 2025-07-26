@@ -22,6 +22,7 @@
 .sidebar-header {
     padding: 1.2rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
 }
 
 .farm-logo {
@@ -41,6 +42,15 @@
     display: flex;
     align-items: center;
     gap: 0.8rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+    position: relative;
+}
+
+.user-info:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .user-avatar {
@@ -64,14 +74,92 @@
     font-size: 1.2rem;
 }
 
+.user-details {
+    flex: 1;
+}
+
 .user-name {
     font-weight: 600;
     font-size: 0.95rem;
+    margin-bottom: 0.2rem;
 }
 
 .user-role {
     opacity: 0.8;
     font-size: 0.8rem;
+}
+
+.dropdown-arrow {
+    margin-left: auto;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.user-info.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* User Dropdown Menu */
+.user-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 1.2rem;
+    right: 1.2rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1001;
+    margin-top: 0.5rem;
+}
+
+.user-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    border-radius: 6px;
+    margin: 0.3rem;
+    font-size: 0.85rem;
+}
+
+.dropdown-item:first-child {
+    margin-top: 0.5rem;
+}
+
+.dropdown-item:last-child {
+    margin-bottom: 0.5rem;
+}
+
+.dropdown-item:hover {
+    background: #f8f9fa;
+    color: #333;
+    text-decoration: none;
+}
+
+.dropdown-item i {
+    width: 16px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: #e9ecef;
+    margin: 0.5rem 1rem;
 }
 
 .sidebar-menu {

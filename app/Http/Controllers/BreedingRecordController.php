@@ -64,7 +64,10 @@ class BreedingRecordController extends Controller
                         ->where('gender', 'female')
                         ->firstOrFail();
 
-        BreedingRecord::create($request->all());
+        $data = $request->all();
+        $data['user_id'] = auth()->id(); // Add the authenticated user's ID
+
+        BreedingRecord::create($data);
 
         return redirect()->route('breeding-records.index')
                         ->with('success', 'Breeding record created successfully.');
@@ -138,7 +141,10 @@ class BreedingRecordController extends Controller
                         ->where('gender', 'female')
                         ->firstOrFail();
 
-        $breedingRecord->update($request->all());
+        $data = $request->all();
+        $data['user_id'] = auth()->id(); // Ensure user_id is set
+
+        $breedingRecord->update($data);
 
         return redirect()->route('breeding-records.index')
                         ->with('success', 'Breeding record updated successfully.');

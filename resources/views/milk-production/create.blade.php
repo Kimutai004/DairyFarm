@@ -17,7 +17,7 @@
                 <i class="fas fa-cow"></i>
                 <span>DairyFarm Pro</span>
             </div>
-            <div class="user-info">
+            <div class="user-info" id="userInfo">
                 <div class="user-avatar">
                     @if(auth()->user()->profile_picture)
                         <img src="{{ Storage::url(auth()->user()->profile_picture) }}" alt="Profile">
@@ -29,6 +29,33 @@
                     <div class="user-name">{{ auth()->user()->name }}</div>
                     <div class="user-role">Farm Manager</div>
                 </div>
+                <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </div>
+            
+            <!-- User Dropdown Menu -->
+            <div class="user-dropdown" id="userDropdown">
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Help & Support</span>
+                </a>
+                <a href="{{ route('logout') }}" class="dropdown-item" 
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
             </div>
         </div>
 
@@ -124,17 +151,6 @@
                         <div class="stat-value">{{ \App\Models\Cattle::where('user_id', auth()->id())->where('status', 'active')->count() }}</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="sidebar-actions">
-                <a href="{{ route('logout') }}" class="action-link" 
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
             </div>
         </div>
     </div>
@@ -354,6 +370,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const userInfo = document.getElementById('userInfo');
+    const userDropdown = document.getElementById('userDropdown');
     
     function toggleSidebar() {
         sidebar.classList.toggle('active');
@@ -367,6 +385,16 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.classList.remove('sidebar-open');
     }
     
+    function toggleUserDropdown() {
+        userInfo.classList.toggle('active');
+        userDropdown.classList.toggle('active');
+    }
+    
+    function closeUserDropdown() {
+        userInfo.classList.remove('active');
+        userDropdown.classList.remove('active');
+    }
+    
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', toggleSidebar);
     }
@@ -374,6 +402,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sidebarOverlay) {
         sidebarOverlay.addEventListener('click', closeSidebar);
     }
+    
+    if (userInfo) {
+        userInfo.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleUserDropdown();
+        });
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!userInfo.contains(e.target) && !userDropdown.contains(e.target)) {
+            closeUserDropdown();
+        }
+    });
     
     // Close sidebar on window resize if mobile
     window.addEventListener('resize', function() {
@@ -398,6 +440,11 @@ document.addEventListener('DOMContentLoaded', function() {
     eveningInput.addEventListener('input', updateTotal);
 });
 </script>
+
+<!-- Hidden logout form -->
+<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+    @csrf
+</form>
 
 <style>
 .page-header {
