@@ -5,6 +5,241 @@
     background: #f8f9fa;
 }
 
+/* Mobile Header Styles */
+.mobile-header {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    z-index: 1050;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-header-left {
+    flex-shrink: 0;
+}
+
+.mobile-header-right {
+    flex-shrink: 0;
+}
+
+/* Hamburger Menu Button */
+.hamburger-menu {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-line {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+/* Hamburger Animation */
+.hamburger-menu.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+}
+
+.hamburger-menu.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Mobile Navigation Menu */
+.mobile-nav-menu {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    z-index: 1040;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.mobile-nav-menu.active {
+    transform: translateX(0);
+}
+
+.mobile-menu-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+}
+
+.user-info-mobile {
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    color: #333;
+}
+
+.mobile-user-actions {
+    padding: 0.5rem;
+}
+
+.user-info-mobile {
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    color: #333;
+}
+
+.mobile-menu-header .user-info-mobile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0;
+    border: none;
+    color: white;
+}
+
+.mobile-menu-header .user-details {
+    flex: 1;
+}
+
+.mobile-menu-header .user-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.mobile-menu-header .user-role {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.mobile-menu-content {
+    padding: 1rem 0;
+}
+
+.mobile-menu-section {
+    margin-bottom: 1.5rem;
+}
+
+.mobile-menu-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.mobile-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.75rem 1rem;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.mobile-menu-item:hover {
+    background: #f8f9fa;
+    color: #667eea;
+    border-left-color: #667eea;
+}
+
+.mobile-menu-item.active {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    border-left-color: #667eea;
+}
+
+.mobile-menu-item i {
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.mobile-menu-footer {
+    border-top: 1px solid #e9ecef;
+    padding: 1rem;
+    margin-top: auto;
+}
+
+.mobile-quick-stats {
+    margin-bottom: 1rem;
+}
+
+.mobile-quick-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+.mobile-quick-stat .stat-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+}
+
+.mobile-quick-stat .stat-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+.mobile-quick-stat .stat-value {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #333;
+}
+
+.mobile-menu-actions {
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
+}
+
+.mobile-action-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    color: #dc3545;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+
+.mobile-action-link:hover {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+/* Body scroll lock when mobile menu is open */
+body.mobile-menu-open {
+    overflow: hidden;
+}
+
+/* Desktop Sidebar Styles */
 .sidebar {
     width: 260px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -324,26 +559,53 @@
 }
 
 @media (max-width: 768px) {
+    /* Hide desktop sidebar on mobile */
     .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
+        display: none;
     }
     
-    .sidebar.active {
-        transform: translateX(0);
+    /* Show mobile header */
+    .mobile-header {
+        display: flex;
     }
     
+    /* Adjust main content for mobile header */
     .main-content {
         margin-left: 0;
-        padding: 4rem 1rem 1rem;
+        padding-top: 80px; /* Account for fixed mobile header */
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
     
+    /* Hide sidebar toggle button */
     .sidebar-toggle {
-        display: block;
+        display: none;
     }
     
-    .sidebar-overlay.active {
-        display: block;
+    /* Hide sidebar overlay */
+    .sidebar-overlay {
+        display: none;
+    }
+    
+    /* Adjust farm logo for mobile */
+    .mobile-header .farm-logo {
+        font-size: 1rem;
+    }
+    
+    .mobile-header .farm-logo span {
+        display: none; /* Hide text on very small screens */
+    }
+}
+
+@media (min-width: 769px) {
+    /* Hide mobile header on desktop */
+    .mobile-header {
+        display: none !important;
+    }
+    
+    /* Show desktop sidebar */
+    .sidebar {
+        display: flex;
     }
 }
 
@@ -673,10 +935,33 @@
     .stat-card {
         padding: 1rem;
     }
-}
     
     .main-content {
         padding: 1rem;
+    }
+    
+    /* Mobile header adjustments for small screens */
+    .mobile-header .farm-logo span {
+        display: none;
+    }
+    
+    .mobile-nav {
+        gap: 0.25rem;
+        padding: 0.25rem;
+    }
+    
+    .mobile-nav-item {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .user-name {
+        font-size: 0.9rem;
+    }
+    
+    .user-role {
+        font-size: 0.75rem;
     }
 }
 </style>
