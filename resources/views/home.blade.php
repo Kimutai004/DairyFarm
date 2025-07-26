@@ -28,7 +28,7 @@
                     <i class="fas fa-cow"></i>
                 </div>
                 <div class="stat-content">
-                    <h3>{{ \App\Models\Cattle::where('assigned_to', auth()->id())->count() }}</h3>
+                    <h3>{{ \App\Models\Cattle::where('user_id', auth()->id())->count() }}</h3>
                     <p>My Cattle</p>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                     <i class="fas fa-calendar-check"></i>
                 </div>
                 <div class="stat-content">
-                    <h3>{{ \App\Models\HealthRecord::whereHas('cattle', function($q) { $q->where('assigned_to', auth()->id()); })->where('next_checkup_date', '>=', today())->where('next_checkup_date', '<=', today()->addDays(7))->count() }}</h3>
+                    <h3>{{ \App\Models\HealthRecord::whereHas('cattle', function($q) { $q->where('user_id', auth()->id()); })->where('next_checkup_date', '>=', today())->where('next_checkup_date', '<=', today()->addDays(7))->count() }}</h3>
                     <p>Upcoming Tasks</p>
                 </div>
             </div>
@@ -155,7 +155,7 @@
                 </div>
                 <div class="card-body">
                     @php
-                        $myCattle = \App\Models\Cattle::where('assigned_to', auth()->id())->take(6)->get();
+                        $myCattle = \App\Models\Cattle::where('user_id', auth()->id())->take(6)->get();
                     @endphp
                     
                     @if($myCattle->count() > 0)
